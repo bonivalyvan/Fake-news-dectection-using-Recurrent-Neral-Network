@@ -94,3 +94,19 @@ Ce script génère automatiquement deux fichiers :
 - `meta.tsv` : contient les labels textuels correspondants.
 
 Vous pouvez charger ces fichiers directement sur [projector.tensorflow.org](https://projector.tensorflow.org/) pour observer la séparation géométrique des champs lexicaux appris par le modèle.
+
+## ⚠️ Analyse Critique : Biais du Dataset et Fuite de Données (Data Leakage)
+
+Bien que le modèle atteigne des performances quasi parfaites (**~99,9 % d'accuracy**), une analyse qualitative des prédictions met en lumière un biais d'évaluation bien documenté sur le dataset ISOT :
+
+### 1. Le biais de signature (Reuters Header)
+* **Articles réels (`True.csv`) :** La majorité des dépêches commencent par une mention d'origine journalistique explicite, telle que :  
+  `WASHINGTON (Reuters) - ...` ou `LONDON (Reuters) - ...`.
+* **Fausses actualités (`Fake.csv`) :** Ces textes proviennent de blogs et de réseaux sociaux, sans en-tête d'agence et intégrant souvent des artefacts spécifiques (mentions Twitter, ponctuation sensationnaliste).
+
+Le réseau de neurones a tendance à surpondérer ces signatures textuelles évidentes (notamment le token `reuters`), apprenant à distinguer l'origine de la source plutôt qu'à analyser la véracité factuelle ou sémantique de l'information.
+
+### 2. Expérimentation & Robustesse
+Afin d'évaluer la réelle capacité de généralisation du modèle :
+* **Test sans en-têtes :** En retirant par regex les mentions d'agences de presse (`r"^.*?\(reuters\)\s*-\s*"`), la précision redescend dans une fourchette plus réaliste de **93 % à 96 %**.
+* **Conclusion :** Ce score de 99,9 % reflète fidèlement la séparabilité des deux distributions du dataset, mais souligne l'importance d'un prétraitement neutre et de tests sur des données issues d'autres sources (*out-of-distribution evaluation*) pour une utilisation en production.
