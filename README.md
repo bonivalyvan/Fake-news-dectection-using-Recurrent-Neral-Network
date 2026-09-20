@@ -19,7 +19,9 @@ La propagation rapide de fausses informations représente un défi majeur dans l
 - **Modèle** : Architecture récurrente bidirectionnelle (Bi-LSTM) à 2 couches avec régularisation Dropout.
 - **Visualisation des Embeddings** : Extraction des vecteurs appris compatible avec le [TensorFlow Embedding Projector](http://projector.tensorflow.org/).
 
----
+### Distribution du jeu de données
+![Distribution du jeu de données](Distribution_of_Fake_and_Real_News.png) 
+
 
 ## 📊 Performances
 
@@ -34,7 +36,7 @@ Le modèle est évalué sur un jeu de test indépendant représentant 20 % des d
 ### Matrice de Confusion
 ![Confusion Matrix](confusion_matrix.png)
 
----
+
 
 ## 🏗️ Architecture du Modèle
 
